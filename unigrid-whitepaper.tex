@@ -167,6 +167,31 @@ Governed \gls{gridnode} sporks can modify the behaviour of the network to a grea
 Several ungoverned \gls{gridnode} sporks are planned. These can be continuously changed by The Unigrid Foundation in order to fine-tune the network and modify it's behaviour.
 
 \begin{itemize}
+\item \textbf{BLOCK\_REQUIRED\_COMPRESSION\_RATIO} | Sets the required compression ratio, as defined between 0 to 1. This defines how much compression is needed for the data portion of new blocks to be considered for storage at a \gls{gridnode} as a compressed block.
+
+\medskip
+\begin{bytefield}[bitwidth=0.5em]{64}
+	\bitheader{0, 31, 63} \\
+	\bitbox{32}{required ratio}
+	\colorbitbox{lightgray}{32}{reserved}
+\end{bytefield}
+
+This only governs new blocks arriving at \glspl{gridnode}. If a block with an insufficient compression ratio is detected, the \gls{gridnode} should reject it. To enforce this rule, \glspl{gridnode} will randomly check blocks and heavily penalize nodes that break it by giving them a ban score, as describe in section \ref{section:penalties}.
+
+\textbf{BLOCK\_VESTED\_ADDRESSES} | This spork defines a list of vested addresses and a single timestamp specifying when the vesting should begin. This is a spork used by The Unigrid Foundation to lock and manage sales of the Unigrid token. It is simply a list of addresses concatenated with the locked amount in each address together with the vesting period, the lock length and the creation timestamp. As the vesting schedule of the sale rounds proceeds, the network will allow for the continuous release of tokens held by these addresses.
+
+\medskip
+\begin{bytefield}[bitwidth=0.5em]{64}
+	\bitheader{0, 31, 63} \\
+	\bitbox{32}{timestamp vesting start}
+	\colorbitbox{lightgray}{32}{reserved} \\
+	\wordbox[lrt]{1}{address data} \\
+	\skippedwords \\
+	\wordbox[lrb]{1}{}
+\end{bytefield}
+
+The timestamp of this spork is initially empty, once the time has been set once, the daemon will never accept any additional changes to this spork. This limitation is put in place in order to make sure that this spork can not be abused in future versions of the daemon.
+
 \item \textbf{ROLLBACK\_SPORKS} | When set to true, triggers a network-wide undo signal that rolls back recent spork changes.
 
 \medskip
@@ -204,9 +229,9 @@ If the size is set to a value outside the allowed interval, the value is clamped
 
 \medskip
 \begin{bytefield}[bitwidth=0.5em]{64}
-	\bitheader{0, 7, 63} \\
-	\bitbox{8}{weight}
-	\colorbitbox{lightgray}{56}{reserved}
+	\bitheader{0, 31, 63} \\
+	\bitbox{32}{weight}
+	\colorbitbox{lightgray}{32}{reserved}
 \end{bytefield}
 \end{itemize}
 
@@ -274,6 +299,7 @@ Peers calculate the compute performance by comparing \glspl{gridnode} against me
 Whenever a \gls{gridnode} is assigned work, the score of that \gls{gridnode} is decreased by the total score of that work, as calculated and described in section \ref{section:scoring}. This results in a \gls{shardgroup} that constantly changes and reorders it's member nodes as work is sent into the \gls{shardgroup} by nodes consuming their service.
 
 \subsubsection{Scoring consensus and penalties}
+\label{section:penalties}
 When a \gls{shardgroup} receives work from a node, it is processed, executed or generally handled by a selected \gls{gridnode} with the highest score. However, another \gls{gridnode} will randomly re-send incoming work and calculate an intermediate score. This extra step is randomly done to prevent tampering and manipulation of the scoring algorithm. A node reporting a score that, as measured by the \gls{gridnode} is obviously manipulated will receive a misbehaviour score. If the offences continue, the node will collect enough misbehaviour points to be banned on the network.
 
 \section{Dynamic rewards and exhaustion}
@@ -569,6 +595,7 @@ This blockchain implementation moves to a new sharded implementation that does n
 When the network looks for confirmation on a \gls{gridnode} reward, the transaction ledger is referenced to check if there is coverage for the work that specific block contains.
 
 \subsection{Blocks and \gls{gridnode} selection}
+\label{section:blocks}
 A number of block types will be required to accomplish the goals of the Unigrid network. All the blocks on the network, with the exception of the blocks in the in-memory FIFO blockchains described in section \ref{section:fifo} uses the block template and blocks described in the current section below. This section is an every changing draft that describes the blockchains on the protocol and storage levels. These blocks are continuously changing.
 
 \subsubsection{Block template}
@@ -645,6 +672,12 @@ Describes a compute block on the network. This block type is used to send work t
 \end{bytefield}
 \label{block:vote}
 Describes storage and vote blocks on the network. In the case of the storage type, lookups are handled via the block hashes and file fingerprints sent by the accessing party. The vote blocks are used to handle voting on governance proposals and \gls{gridnode} spork changes.
+
+\subsection{Delta encoding and shard compression}
+\label{section:delta}
+To further optimize network communication and decrease bandwidth utilization, the Unigrid network will implement shard compression based on LZ4m \cite{lz42017}. This compression is done to the data portion of the block, as described in section \ref{section:blocks} and happens before transmission over the network and during pre-assembly of the block. Nodes will only attempt to compress data blobs of sufficient size and will not use the compressed version in the block if the compression ratio is not sufficient.
+
+Whenever compression is not an alternative or if the data has not changed much from a previous version, the network also implements delta encoding as defined by the \emph{bsdiff tool} \cite{percival2006}. This allows nodes to utilize diffs (data with only the differences). These diffs are sent over the network as data blobs whenever data is very similar to a previous data blob in a previously sent block that can be referenced.
 
 \section{Anonymous communication}
 To provide a completely anonymous network that can replace the TOR network and fix the security problems of that network, the Unigrid network implements an anonymous communication layer that allows existing applications to connect to the network and communicate via it. Nodes can use the Unigrid network to access the regular Internet via the \glspl{gridnode} on the network. Government agencies and hackers have learned how to bypass and break the security of the TOR network \cite{guardian2013}. While they are not able to take it down, they are able to break it's security by deploying enough nodes on the network until they gain control over entire communication queues. If they achieve this, they can monitor all the data sent over that specific node queue.
@@ -816,6 +849,12 @@ The algorithms and descriptions covered herein may not be used to implement a se
 	\href{https://bnfc.digitalgrammars.com/}{bnfc.digitalgrammars.com}
 	\the\year{}.
 
+\bibitem{percival2006}
+	Colin Percival, Wadham College, University of Oxford,
+	\emph{"Matching with Mismatches and Assorted Applications"},
+	\href{http://www.daemonology.net/papers/thesis.pdf}{www.daemonology.net},
+	2006.
+
 \bibitem{dashref2017}
 	Dash Project,
 	\emph{"Dash Developer Reference: Spork"},
@@ -900,6 +939,12 @@ The algorithms and descriptions covered herein may not be used to implement a se
 	\emph{"Bitcoin: A Peer-to-Peer Electronic Cash System"},
 	\href{http://www.bitcoin.org}{www.bitcoin.org},
 	2008.
+
+\bibitem{lz42017}
+	Se-Jun Kwon, Sang-Hoon Kim, Hyeong-Jun Kim, and Jin-Soo Kim, College of Information and Communication Engineering, Sungkyunkwan University,
+	\emph{"LZ4m: A Fast Compression Algorithm for In-Memory Data"},
+	\href{http://csl.skku.edu/papers/icce17.pdf}{csl.skku.edu},
+	2017.
 
 \bibitem{songze2018}
 	Songze Li, Mingchao Yu, A. Salman Avestimehr, Sreeram Kannan \& Pramod Viswanath, University of Southern California, University of Washington \& University of Illinois at Urbana-Champaign,
