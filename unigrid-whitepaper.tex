@@ -324,9 +324,10 @@ The Unigrid network uses a naive approach to adjust the rewards that \glspl{grid
 		\caption{Describes how the exhaustion level on a \gls{gridnode} influences the reward modifier that the network and the nodes use as a baseline for it's reward decisions.}
 \end{figure}
 
-Resource exhaustion is monitored by each \gls{gridnode}, with compute cycles, storage space and communication speed tracked separately by the node and the network. The nodes on the network choose how to distribute work based on the scoring algorithm, as covered previously and by keeping track of this exhaustion. When the exhaustion on a node increases, the rewards received increase with it. However, at the same time, exhausting resources eventually lowers the score - because the node will be unable to accept additional work and slow down as it's resource exhaustion increases. This creates a constant balancing act between the scoring and the exhaustion on the node.
+\noindent Resource exhaustion is monitored by each \gls{gridnode}, with compute cycles, storage space and communication speed tracked separately by the node and the network. The nodes on the network choose how to distribute work based on the scoring algorithm, as covered previously and by keeping track of this exhaustion. When the exhaustion on a node increases, the rewards received increase with it. However, at the same time, exhausting resources eventually lowers the score - because the node will be unable to accept additional work and slow down as it's resource exhaustion increases. This creates a constant balancing act between the scoring and the exhaustion on the node.
 
-Regardless of the type of resource, the relation between resource exhaustion and the reward modifier can be described by the function;
+\newpage
+\noindent Regardless of the type of resource, the relation between resource exhaustion and the reward modifier can be described by the function;
 
 \[
 	\begin{array}{l}
@@ -334,7 +335,7 @@ Regardless of the type of resource, the relation between resource exhaustion and
 	\end{array}	
 \]
 
-Where $0 < y < 1$ represents the exhaustion level between zero and 100 percent, as defined by the decimal number $y$.
+\noindent Where $0 < y < 1$ represents the exhaustion level between zero and 100 percent, as defined by the decimal number $y$.
 
 \subsection{Reward consensus and penalties}
 If a \gls{gridnode} requests a reward that disagrees with the way that rewards are calculated and weighted according to scoring and exhaustion levels, the node that requested the work that is currently being processed has the right to temporarily ban that \gls{gridnode} from it's list of work candidates. A \gls{gridnode} has the same right if it receives an incorrect reward for a submitted work from a node. If an incorrect reward amount submitted to one of the transaction blockchains - the rest of the network will also penalize a node. Initially it will just add a misbehaviour score, similar to how nodes are governed on a Bitcoin-based blockchain. However, if a node keeps abusing the network and the reward consensus, it will eventually get banned with a substantial ban time and the IP address of that specific node will not be allowed to participate on the network during the ban time.
