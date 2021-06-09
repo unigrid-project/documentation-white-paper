@@ -1,0 +1,11 @@
+*.aux
+*.dot
+*.log
+*.out
+*.pdf
+*.glg
+*.glo
+*.gls
+*.gz
+*.ist
+*.xwm

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+FIRSTTAG=$(git describe --tags --dirty='-*' 2>/dev/null)
+RELTAG=$(git describe --tags --long --dirty='-*' --match '[0-9]*.*' 2>/dev/null)
+LASTTAG=$(git tag --sort=committerdate 2>/dev/null)
+TAGDATE=$(git log -1 --format=%as $LASTTAG)
+
+git --no-pager log -1 --date=short \
+	--pretty=format:"\usepackage[%
+		shash={%h},
+		lhash={%H},
+		authname={%an},
+		authemail={%ae},
+		authsdate={$TAGDATE},
+		authidate={%ai},
+		authudate={%at},
+		commname={%an},
+		commemail={%ae},
+		commsdate={$TAGDATE},
+		commidate={%ai},
+		commudate={%at},
+		refnames={%d},
+		firsttagdescribe={$FIRSTTAG},
+		reltag={$RELTAG}
+	]{gitexinfo}" HEAD > .git/gitHeadInfo.gin
