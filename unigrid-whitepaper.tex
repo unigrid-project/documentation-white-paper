@@ -99,20 +99,35 @@ The former Darkcoin project originally developed the concept of masternodes aidi
 \subsection{Gridnode sporks}
 Historically, network sporks have been controlled from a central controller and signed using spork keys in the possession of the project maintainers \cite{dashref2017}. While sporks are a useful feature that allows the network to toggle new network rules and control behaviour of the protocol, the fact that project maintainers can freely manipulate these sporks makes the solution centralized. If the spork key gets leaked or the maintainers are pressured into manipulating the network in a undesirable way, this creates a big security risk that can threaten the long-term viability of the network.
 
-Unigrid completely ameliorates the spork system by introducing the concept of \gls{gridnode} sporks. \Gls{gridnode} sporks are either categorized as governed or ungoverned. While their concept is the same and the keys for signing these sporks are in the possession of The Unigrid Foundation, a governed \gls{gridnode} spork can only be modified after the \glspl{gridnode} on the network reach consensus and accept the change. Ungoverned \gls{gridnode} sporks, on the other hand, can be modified at will and are used by the developers of the system in order to tweak its behaviour for either performance considerations or testing. \Gls{gridnode} sporks also extend the definition of traditional sporks slightly. While normal sporks are defined as a single 64 bit number, \gls{gridnode} sporks have several fields:
+Unigrid completely ameliorates the spork system by introducing the concept of \gls{gridnode} sporks. \Gls{gridnode} sporks are either categorized as governed or ungoverned. While their concept is the same and the keys for signing these sporks are in the possession of The Unigrid Foundation, a governed \gls{gridnode} spork can only be modified after the \glspl{gridnode} on the network reach consensus and accept the change. Ungoverned \gls{gridnode} sporks, on the other hand, can be modified at will and are used by the developers of the system in order to tweak its behaviour for either performance considerations or testing. \Gls{gridnode} sporks also extend the definition of traditional sporks slightly. While normal sporks are defined as a single 64 bit number, \gls{gridnode} sporks have several fields while also defining a data portion for storing an arbitrary amount of data:
 
 \bigskip
 \begin{noindent}
-	\begin{bytefield}[bitwidth=0.27em]{64}
+	\begin{bytefield}[bitwidth=0.27em]{128}
 		\bitheader{0, 63, 127} \\
 		\bitbox{64}{timestamp}
-		\bitbox{64}{value} \\
+		\bitbox{32}{data size}
+		\bitbox{32}{delta size} \\
 		\bitbox{64}{previous timestamp}
-		\bitbox{64}{previous value}
+		\colorbitbox{lightgray}{64}{reserved} \\
+		\begin{rightwordgroup}{data portion}
+			\bitbox{16}{flags}
+			\bitbox{16}{type}
+			\colorbitbox{lightgray}{96}{reserved} \\
+			\wordbox[lrt]{1}{spork data} \\
+			\skippedwords \\
+			\wordbox[lrb]{1}{}
+		\end{rightwordgroup}
+		\\
+		\begin{rightwordgroup}{delta portion}
+			\wordbox[lrt]{1}{spork delta data} \\
+			\skippedwords \\
+			\wordbox[lrb]{1}{}
+			\vspace{0.25cm}
+		\end{rightwordgroup}
 	\end{bytefield}
 \end{noindent}
-
-\noindent Storing the previous timestamp and value in the \gls{gridnode} spork allows the network to identify at what time a value was applied and, when requested, undo any recent change to a \gls{gridnode} spork. Furthermore, the \gls{gridnode} sporks defined in the protocol of the network are not static. As the network changes and evolves, governed and ungoverned \gls{gridnode} sporks can be continuously introduced and purged from the protocol in order to satisfy any changing requirements. \Gls{gridnode} sporks can only be added or removed to or from the protocol with new releases of the Unigrid daemon.
+\noindent The delta data stored in the \gls{gridnode} spork either contains the previous delta encoding, as described in section \ref{section:delta}, or the raw representation of the previous value of the spork. The flags section of the spork controls if the data stored in the delta portion is one or the other. Storing the previous timestamp and data in in this way allows the network to identify at what time a value was applied and, when requested, undo any recent change to a \gls{gridnode} spork. It also allows the network to undo a recent change to a governed \gls{gridnode} spork in the event that the change isn't accepted by the network. Furthermore, the \gls{gridnode} sporks defined in the protocol of the network are not static. As the network changes and evolves, governed and ungoverned \gls{gridnode} sporks can be continuously introduced and purged from the protocol in order to satisfy any changing requirements. \Gls{gridnode} sporks can only be added or removed to or from the protocol with new releases of the Unigrid daemon.
 
 \subsubsection{Governed sporks}
 Governed \gls{gridnode} sporks can modify the behaviour of the network to a greater extent than ungoverned \gls{gridnode} sporks and are therefore under strict network control and require consensus by the \glspl{gridnode} on the network before a change to them is accepted. The network defines a number of governed \gls{gridnode} sporks:
