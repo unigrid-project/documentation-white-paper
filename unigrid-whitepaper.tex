@@ -37,7 +37,6 @@
 \author{\textit{Adam Waldenberg\\\href{mailto:adam@unigrid.org}{adam@unigrid.org}}}
 \affil{The Unigrid Foundation\\\href{http://www.unigrid.org}{www.unigrid.org}}
 \title{Unigrid: A foundation for a decentralized, consensus-driven, segmented, blockchain-based Internet}
-\date{Internal Draft Version 1.10 (\today)}
 \date{\emph{Internal Draft Version \gitRel\hspace{5pt}(\gitCommitterDate)}}
 \renewcommand*{\glstextformat}[1]{\textcolor{black}{\textit{#1}}}
 
@@ -340,7 +339,6 @@ The Unigrid network uses a naive approach to adjust the rewards that \glspl{grid
 \subsection{Reward consensus and penalties}
 If a \gls{gridnode} requests a reward that disagrees with the way that rewards are calculated and weighted according to scoring and exhaustion levels, the node that requested the work that is currently being processed has the right to temporarily ban that \gls{gridnode} from it's list of work candidates. A \gls{gridnode} has the same right if it receives an incorrect reward for a submitted work from a node. If an incorrect reward amount submitted to one of the transaction blockchains - the rest of the network will also penalize a node. Initially it will just add a misbehaviour score, similar to how nodes are governed on a Bitcoin-based blockchain. However, if a node keeps abusing the network and the reward consensus, it will eventually get banned with a substantial ban time and the IP address of that specific node will not be allowed to participate on the network during the ban time.
 
-
 \section{Domain registry}
 \label{section:domain}
 The Unigrid network contains an internal domain registry that allows users to associate an address on the network with an easy to read domain name. While the addresses on the Unigrid network are typical 256 bit public keys represented with 36 byte long PKH identifiers, the domain name association allows people to easily send Unigrid tokens to an easily identifiable address. It makes alot of sense to be able to send tokens to an address such as $somecompany.com$ rather than;
@@ -593,7 +591,7 @@ The original implementation of the Unigrid blockchain is based around the PIVX c
 
 This blockchain implementation moves to a new sharded implementation that does not keep the history of the chain indefinitely intact. With the help of the \glspl{gridnode} on the network, the network will reorganize and compact the chain, only preserving a certain history of transaction data, keeping track of balances in individual addresses. The current transaction blockchain will also be split up into smaller side chains. Using the address ledger, the network will still be able to quickly find which address or transaction belongs to a specific address. This is done to also allow the transaction ledger to scale in the same manner as the side chains that hold storage and compute blocks.
 
-When the network looks for confirmation on a \gls{gridnode} reward, the transaction ledger is referenced to check if there is coverage for the work that specific block contains.
+\noindent When the network looks for confirmation on a \gls{gridnode} reward, the transaction ledger is referenced to check if there is coverage for the work that specific block contains.
 
 \subsection{Blocks and \gls{gridnode} selection}
 \label{section:blocks}
@@ -617,6 +615,7 @@ A number of block types will be required to accomplish the goals of the Unigrid 
 		\wordbox[lrt]{1}{block-type specific data} \\
 		\skippedwords \\
 		\wordbox[lrb]{1}{}
+		\vspace{0.2cm}
 	\end{rightwordgroup}
 \end{bytefield}
 The blocks stored in the compute chains and storage chains in the network have the above block template, with the block-type specific data filled in to describe the different block types on the network.
@@ -631,6 +630,7 @@ The blocks stored in the compute chains and storage chains in the network have t
 	\wordbox[lrt]{1}{domain name data} \\
 	\skippedwords \\
 	\wordbox[lrb]{1}{}
+	\vspace{0.2cm}
 \end{bytefield}
 A block type that registers and keeps a domain registration on the network. 
 
@@ -645,6 +645,7 @@ A block type that registers and keeps a domain registration on the network.
 	\wordbox[lrt]{1}{scoring data that differs depending on type} \\
 	\skippedwords \\
 	\wordbox[lrb]{1}{}
+	\vspace{0.2cm}
 \end{bytefield}
 A block type that handles scoring on the network. These blocks are primarily used for consensus and to prevent manipulation to the scoring system on the network. The 3-bit \emph{type} value is a complement to the \emph{type} field in the block template. It tells the network if the block is scoring storage, bandwidth, compute cycles, or some other scoring type.
 
@@ -659,6 +660,7 @@ A block type that handles scoring on the network. These blocks are primarily use
 	\wordbox[lrt]{1}{compute data} \\
 	\skippedwords \\
 	\wordbox[lrb]{1}{}
+	\vspace{0.2cm}
 \end{bytefield}
 Describes a compute block on the network. This block type is used to send work to the network. The \emph{p} flag tells the network if this is a persistent program or not. A persistent program can detach and run on it's own - without any control from the node that deployed it.
 
@@ -667,9 +669,10 @@ Describes a compute block on the network. This block type is used to send work t
 	\bitheader{0, 23, 31} \\
 	\bitbox{24}{owner}
 	\colorbitbox{lightgray}{8}{reserved} \\
-	\wordbox[lrt]{1}{null terminated domain name string} \\
+	\wordbox[lrt]{1}{data} \\
 	\skippedwords \\
 	\wordbox[lrb]{1}{}
+	\vspace{0.2cm}
 \end{bytefield}
 \label{block:vote}
 Describes storage and vote blocks on the network. In the case of the storage type, lookups are handled via the block hashes and file fingerprints sent by the accessing party. The vote blocks are used to handle voting on governance proposals and \gls{gridnode} spork changes.
@@ -815,6 +818,7 @@ We have shown how the nodes on the network will govern themselves and update to 
 
 The work in this paper collects many proven principles and solutions and adapts them for use with a decentralized and distributed network solution. Some, like web assembly and web GPU, have recently been developed, while others have been used and proven in industry since many years back. Using the work in this paper, a robust and anonymous network capable of scaling indefinitely and handling enormous amounts of computation and storage will be developed.
 
+\newpage
 \section{License}
 This paper is a continuous draft and should not be taken as an absolute description of the future state and implementation of the network. Rather, this paper will evolve together with the evolution of the network and the protocol. To preserve the historical work of the foundation, all public versions and the release history of this paper and it's specifications will be published on the website of The Unigrid Foundation \cite{unigrid}.
 
