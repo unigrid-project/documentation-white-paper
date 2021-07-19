@@ -29,7 +29,9 @@
 \usepackage[automake]{glossaries}
 \usepackage{bytefield}
 
+\begin{comment}
 \usepackage{xwatermark}
+\end{comment}
 
 \let\oldhref\href
 \renewcommand{\href}[2]{\oldhref{#1}{\bfseries#2}}
@@ -37,7 +39,7 @@
 \author{\textit{Adam Waldenberg\\\href{mailto:adam@unigrid.org}{adam@unigrid.org}}}
 \affil{The Unigrid Foundation\\\href{http://www.unigrid.org}{www.unigrid.org}}
 \title{Unigrid: A foundation for a decentralized, consensus-driven, segmented, blockchain-based Internet}
-\date{\emph{Internal Draft Version \gitRel\hspace{5pt}(\gitCommitterDate)}}
+\date{\emph{Draft Version \gitRel\hspace{5pt}(\gitCommitterDate)}}
 \renewcommand*{\glstextformat}[1]{\textcolor{black}{\textit{#1}}}
 
 \newcommand{\colorbitbox}[3]{%
@@ -71,7 +73,9 @@
 	description={Base currency unit and biggest denomination of the Unigrid cryptocurrency}
 }
 
+\begin{comment}
 \newwatermark[allpages,color=red!15,angle=90,xpos=-85,ypos=0,scale=0.5]{CONFIDENTIAL UNTIL A LATER VERSION IS PUBLICLY PUBLISHED BY THE UNIGRID FOUNDATION}
+\end{comment}
 
 \begin{document}
 \maketitle
