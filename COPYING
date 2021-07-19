@@ -1,0 +1,40 @@
+                       UNIGRID DOCUMENT LICENSE
+                        THE UNIGRID FOUNDATION
+
+                           VERSION  20210719
+                            www.unigrid.org
+
+
+This paper is © 2021 The Unigrid Foundation. However, this paper can
+be freely shared and distributed and published without prior consent from
+The Unigrid Foundation, as long as this license is included.
+
+This paper is a continuous draft and should not be taken as an absolute
+description of the future state and implementation of the network. Rather,
+this paper will evolve together with the evolution of the network and the
+protocol.
+
+To preserve the historical work of the foundation, all public versions and
+the release history of this paper and it’s specifications will be published
+on the website of The Unigrid Foundation (https://www.unigrid.org).
+
+Intermediate development releases should be called ‘draft versions‘. When
+The Unigrid Foundation makes a formal and public release implementing the
+functionality as described in this paper, the paper should, together with that
+release of the network, be labelled as a ‘final version‘.
+
+The algorithms and descriptions covered herein may not be used to implement a
+separate implementation, network or product outside the oversight of
+The Unigrid Foundation.
+
+If any solution, product or network uses the algorithms or descriptions as
+described in this paper, in their own implementations, without the explicit
+permission of The Unigrid Foundation, the foundation has the right to seek
+compensation. As supported by the statutes of The Unigrid Foundation, the
+foundation does this to protect the integrity and stability of the Unigrid
+network, limiting network fragmentation and promoting the growth of an
+anonymous decentralized, global Internet that anyone can use and join.
+
+In no event will The Unigrid Foundation be liable for any damages, including
+general, special, incidental or consequential damages arising out
+of the use, distribution or publication of this paper. 
