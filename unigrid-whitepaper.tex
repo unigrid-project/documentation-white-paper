@@ -599,6 +599,8 @@ This blockchain implementation moves to a new sharded implementation that does n
 
 \subsection{Blocks and \gls{gridnode} selection}
 \label{section:blocks}
+To increase the flexibility of the blockchains on the network, a more naive approach to the block layout is taken, focusing on a more general structure. Even if Unigrid can support transactions, the design does not force transactions or transactional information onto the blocks. In fact, the block template of the network is completely transactionless. Instead of data storage being an afterthought, which is the case with most current blockchain solutions, the network focuses on a more agnostic approach that improves the ability to store other types of data in the blocks.
+
 A number of block types will be required to accomplish the goals of the Unigrid network. All the blocks on the network, with the exception of the blocks in the in-memory FIFO blockchains described in section \ref{section:fifo} uses the block template and blocks described in the current section below. This section is an every changing draft that describes the blockchains on the protocol and storage levels. These blocks are continuously changing.
 
 \subsubsection{Block template}
