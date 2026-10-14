@@ -1,7 +1,7 @@
 # The Unigrid network white paper
 
 *Unigrid: A foundation for a decentralized, consensus-driven, segmented,
-blockchain-based Internet - © 2021 The Unigrid Foundation*
+blockchain-based Internet - © 2021-2022 Stiftelsen The Unigrid Foundation*
 
 This paper is a continuous draft and should not be taken as an absolute
 description of the future state and implementation of the network. Rather,
